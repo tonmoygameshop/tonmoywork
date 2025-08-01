@@ -1,0 +1,1277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<script src='//libtl.com/sdk.js' data-zone='9624679' data-sdk='show_9624679'></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tasks Work - Earn Money</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2ecc71;
+            --secondary: #f1c40f;
+            --accent: #3498db;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+            --success: #27ae60;
+            --warning: #e67e22;
+            --danger: #e74c3c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            position: relative;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            animation: fadeOut 1s 5s forwards;
+        }
+
+        .loading-image {
+            width: 200px;
+            height: 200px;
+            margin-bottom: 30px;
+            animation: pulse 2s infinite;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .loading-bar {
+            width: 80%;
+            height: 10px;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .loading-progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--light) 0%, var(--secondary) 100%);
+            animation: loading 5s linear forwards;
+            border-radius: 10px;
+        }
+
+        @keyframes loading {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 15px rgba(255, 255, 255, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+        }
+
+        @keyframes fadeOut {
+            to { opacity: 0; visibility: hidden; }
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 10;
+            animation: slideDown 0.5s ease-out;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i {
+            margin-right: 10px;
+            color: var(--secondary);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .points {
+            background-color: var(--secondary);
+            color: var(--dark);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+            margin-right: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background-color: var(--light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--dark);
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        /* Navigation */
+        .nav {
+            display: flex;
+            justify-content: space-around;
+            background: white;
+            padding: 10px 0;
+            box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.05);
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 480px;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #777;
+            text-decoration: none;
+            font-size: 12px;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            width: 6px;
+            height: 6px;
+            background-color: var(--primary);
+            border-radius: 50%;
+        }
+
+        /* Page Content */
+        .page {
+            padding: 20px;
+            padding-bottom: 80px;
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Box Styles */
+        .box {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+            animation: boxEntry 0.6s ease-out;
+        }
+
+        .box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary), var(--accent));
+        }
+
+        @keyframes boxEntry {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .box-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+        }
+
+        .box-title i {
+            margin-right: 10px;
+            color: var(--primary);
+        }
+
+        .box-content {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .ad-container {
+            width: 100%;
+            margin: 15px 0;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 50px;
+            border: 1px dashed #ddd;
+        }
+
+        /* Stats Box */
+        .stats-box {
+            display: flex;
+            justify-content: space-between;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            width: 48%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            animation: statEntry 0.6s ease-out;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #777;
+        }
+
+        @keyframes statEntry {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* List Styles */
+        .list {
+            list-style-type: none;
+        }
+
+        .list-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .list-item:last-child {
+            border-bottom: none;
+        }
+
+        .list-item i {
+            color: var(--secondary);
+            margin-right: 10px;
+        }
+
+        /* Button Styles */
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(46, 204, 113, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--warning) 100%);
+            box-shadow: 0 5px 15px rgba(241, 196, 15, 0.3);
+        }
+
+        .btn-secondary:hover {
+            box-shadow: 0 8px 20px rgba(241, 196, 15, 0.4);
+        }
+
+        .btn-disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .btn-disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Task Boxes */
+        .task-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .task-box {
+            background: white;
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            animation: taskEntry 0.6s ease-out;
+        }
+
+        .task-box::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+        }
+
+        .task-box:nth-child(1)::after { background: linear-gradient(to right, #2ecc71, #3498db); }
+        .task-box:nth-child(2)::after { background: linear-gradient(to right, #e74c3c, #e67e22); }
+        .task-box:nth-child(3)::after { background: linear-gradient(to right, #9b59b6, #34495e); }
+        .task-box:nth-child(4)::after { background: linear-gradient(to right, #f1c40f, #e67e22); }
+
+        .task-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .task-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+
+        .task-reward {
+            font-size: 14px;
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .task-bonus {
+            font-size: 12px;
+            color: var(--secondary);
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .task-timer {
+            font-size: 11px;
+            color: #777;
+            margin-top: 10px;
+        }
+
+        @keyframes taskEntry {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Withdrawal Form */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.2);
+        }
+
+        .payment-methods {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+
+        .payment-method {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+
+        .payment-method.active {
+            background-color: rgba(46, 204, 113, 0.1);
+            border: 1px solid var(--primary);
+        }
+
+        .payment-icon {
+            width: 50px;
+            height: 50px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 5px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .payment-name {
+            font-size: 12px;
+            color: var(--dark);
+        }
+
+        /* Confirmation Message */
+        .confirmation {
+            text-align: center;
+            padding: 20px;
+            background-color: rgba(46, 204, 113, 0.1);
+            border-radius: 10px;
+            margin-top: 20px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .confirmation i {
+            font-size: 40px;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .confirmation h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        /* Animation Classes */
+        .animate-bounce {
+            animation: bounce 2s infinite;
+        }
+
+        .animate-pulse {
+            animation: pulse 2s infinite;
+        }
+
+        .animate-shake {
+            animation: shake 0.5s;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        /* Page Specific Styles */
+        #home-page .box:nth-child(1) {
+            background: linear-gradient(135deg, rgba(46, 204, 113, 0.1) 0%, rgba(241, 196, 15, 0.1) 100%);
+        }
+
+        #earn-page {
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.05) 0%, rgba(155, 89, 182, 0.05) 100%);
+        }
+
+        #media-page {
+            background: linear-gradient(135deg, rgba(241, 196, 15, 0.05) 0%, rgba(230, 126, 34, 0.05) 100%);
+        }
+
+        #withdrawal-page {
+            background: linear-gradient(135deg, rgba(231, 76, 60, 0.05) 0%, rgba(52, 152, 219, 0.05) 100%);
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 400px) {
+            .box {
+                padding: 15px;
+            }
+            
+            .task-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen">
+        <div class="loading-image">TASKS WORK</div>
+        <div class="loading-bar">
+            <div class="loading-progress"></div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-coins"></i>
+                <span>TASKS WORK</span>
+            </div>
+            <div class="user-info">
+                <div class="points" id="user-points">0 Points</div>
+                <div class="profile">U</div>
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <main>
+            <!-- Home Page -->
+            <div id="home-page" class="page active">
+                <div class="box animate-bounce">
+                    <h2 class="box-title"><i class="fas fa-tasks"></i>Tasks Work</h2>
+                    <p class="box-content">কাজ করুন আর পেমেন্ট নিন বিকাশ ও নগদে</p>
+                </div>
+
+                <div class="ad-container">
+                    <!-- Ad Script -->
+                    <script type="text/javascript">
+                        atOptions = {
+                            'key': '586f3a7fc60772622aa7fd5d0d96b4eb',
+                            'format': 'iframe',
+                            'height': 50,
+                            'width': 320,
+                            'params': {}
+                        };
+                    </script>
+                    <script type="text/javascript" src="//www.highperformanceformat.com/586f3a7fc60772622aa7fd5d0d96b4eb/invoke.js"></script>
+                </div>
+
+                <div class="stats-box">
+                    <div class="stat-item">
+                        <div class="stat-value" id="ads-watched">0</div>
+                        <div class="stat-label">Ads Watched</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="total-points">0</div>
+                        <div class="stat-label">Total Points</div>
+                    </div>
+                </div>
+
+                <div class="box">
+                    <h2 class="box-title"><i class="fas fa-bullseye"></i>দৈনিক টার্গেট</h2>
+                    <ul class="list box-content">
+                        <li class="list-item"><i class="fas fa-check-circle"></i>50 Ads - 100 Points - Bonus 20 Points</li>
+                        <li class="list-item"><i class="fas fa-check-circle"></i>100 Ads - 200 Points - Bonus 50 Points</li>
+                        <li class="list-item"><i class="fas fa-check-circle"></i>250 Ads - 500 Points - Bonus 100 Points</li>
+                        <li class="list-item"><i class="fas fa-check-circle"></i>500 Ads - 1000 Points - Bonus 200 Points</li>
+                        <li class="list-item"><i class="fas fa-check-circle"></i>প্রতি এডে 2 points করে পাবেন</li>
+                    </ul>
+                </div>
+
+                <div class="ad-container">
+                    <!-- Ad Script -->
+                    <script type="text/javascript">
+                        atOptions = {
+                            'key': '586f3a7fc60772622aa7fd5d0d96b4eb',
+                            'format': 'iframe',
+                            'height': 50,
+                            'width': 320,
+                            'params': {}
+                        };
+                    </script>
+                    <script type="text/javascript" src="//www.highperformanceformat.com/586f3a7fc60772622aa7fd5d0d96b4eb/invoke.js"></script>
+                </div>
+
+                <div class="box">
+                    <h2 class="box-title"><i class="fas fa-money-bill-wave"></i>পেমেন্ট সিস্টেম</h2>
+                    <ul class="list box-content">
+                        <li class="list-item"><i class="fas fa-coins"></i>800 Points - 20 টাকা</li>
+                        <li class="list-item"><i class="fas fa-coins"></i>1200 Points - 35 টাকা</li>
+                        <li class="list-item"><i class="fas fa-coins"></i>2000 Points - 50 টাকা</li>
+                        <li class="list-item"><i class="fas fa-coins"></i>3500 Points - 80 টাকা</li>
+                        <li class="list-item"><i class="fas fa-coins"></i>5000 Points - 100 টাকা - 20টাকা</li>
+                        <li class="list-item"><i class="fas fa-coins"></i>আরো বেশি পয়েন্ট করলে বেশি টাকা পাবেন</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Earn Page -->
+            <div id="earn-page" class="page">
+                <div class="box">
+                    <h2 class="box-title"><i class="fas fa-play-circle"></i>কাজ শুরু করুন</h2>
+                    <p class="box-content">এড দেখুন ও পয়েন্ট বাড়ান</p>
+                </div>
+
+                <div class="ad-container">
+                    <!-- Ad Script -->
+                    <script type="text/javascript">
+                        atOptions = {
+                            'key': '586f3a7fc60772622aa7fd5d0d96b4eb',
+                            'format': 'iframe',
+                            'height': 50,
+                            'width': 320,
+                            'params': {}
+                        };
+                    </script>
+                    <script type="text/javascript" src="//www.highperformanceformat.com/586f3a7fc60772622aa7fd5d0d96b4eb/invoke.js"></script>
+                </div>
+
+                <div class="task-grid">
+                    <div class="task-box">
+                        <h3 class="task-title">50 Ads</h3>
+                        <div class="task-reward">100 Points</div>
+                        <div class="task-bonus">+20 Bonus Points</div>
+                        <button class="btn btn-secondary" onclick="startTask(50)">Start</button>
+                        <div class="task-timer" id="timer-50">Available now</div>
+                    </div>
+
+                    <div class="task-box">
+                        <h3 class="task-title">100 Ads</h3>
+                        <div class="task-reward">200 Points</div>
+                        <div class="task-bonus">+50 Bonus Points</div>
+                        <button class="btn btn-secondary" onclick="startTask(100)">Start</button>
+                        <div class="task-timer" id="timer-100">Available now</div>
+                    </div>
+
+                    <div class="task-box">
+                        <h3 class="task-title">250 Ads</h3>
+                        <div class="task-reward">500 Points</div>
+                        <div class="task-bonus">+100 Bonus Points</div>
+                        <button class="btn btn-secondary" onclick="startTask(250)">Start</button>
+                        <div class="task-timer" id="timer-250">Available now</div>
+                    </div>
+
+                    <div class="task-box">
+                        <h3 class="task-title">500 Ads</h3>
+                        <div class="task-reward">1000 Points</div>
+                        <div class="task-bonus">+200 Bonus Points</div>
+                        <button class="btn btn-secondary" onclick="startTask(500)">Start</button>
+                        <div class="task-timer" id="timer-500">Available now</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Media Page -->
+            <div id="media-page" class="page">
+                <div class="box">
+                    <h2 class="box-title"><i class="fas fa-user-friends"></i>৫ জন বন্ধুকে রেফার কর</h2>
+                    <p class="box-content">নিচের লিংকটি শেয়ার করুন এবং বোনাস পয়েন্ট পান</p>
+                    <div class="form-group" style="margin-top: 15px;">
+                        <input type="text" class="form-input" id="referral-link" value="https://t.me/tasksworknew_bot" readonly>
+                        <button class="btn" onclick="copyReferralLink()" style="margin-top: 10px;">
+                            <i class="fas fa-copy"></i> কপি করুন
+                        </button>
+                    </div>
+                </div>
+
+                <div class="ad-container">
+                    <!-- Ad Script -->
+                    <script type="text/javascript">
+                        atOptions = {
+                            'key': '586f3a7fc60772622aa7fd5d0d96b4eb',
+                            'format': 'iframe',
+                            'height': 50,
+                            'width': 320,
+                            'params': {}
+                        };
+                    </script>
+                    <script type="text/javascript" src="//www.highperformanceformat.com/586f3a7fc60772622aa7fd5d0d96b4eb/invoke.js"></script>
+                </div>
+
+                <div class="box">
+                    <button class="btn btn-secondary" id="join-channel-btn" onclick="joinChannel()">
+                        <i class="fab fa-telegram"></i> Joined Telegram Channel
+                    </button>
+                    <button class="btn" id="daily-reward-btn" onclick="claimDailyReward()" style="margin-top: 15px;">
+                        <i class="fas fa-gift"></i> Daily Reward
+                    </button>
+                    <div class="task-timer" id="daily-timer" style="text-align: center; margin-top: 15px;">Next reward in: 12h 0m</div>
+                </div>
+            </div>
+
+            <!-- Withdrawal Page -->
+            <div id="withdrawal-page" class="page">
+                <div class="box">
+                    <h2 class="box-title"><i class="fas fa-money-check-alt"></i>পেমেন্ট রিকুয়েস্ট পাঠান</h2>
+                    <p class="box-content">প্রতিবার পেমেন্ট রিকুয়েস্ট পাঠানোর আগে অবশ্যই এই বটের লিংক তোমার ৫ জন্য বন্ধুকে শেয়ার করবে। তা না হলে পেমেন্ট রিকুয়েস্ট গ্ৰহণ করবে না। নিয়ম মেনে চলুন</p>
+                    <p class="box-content" style="color: var(--danger); font-weight: 500; margin-top: 10px;">সর্বনিম্ন ৮০০ পয়েন্ট না হ‌ওয়া পর্যন্ত পেমেন্ট রিকুয়েস্ট দিতে পারবেন না</p>
+                </div>
+
+                <div class="ad-container">
+                    <!-- Ad Script -->
+                    <script type="text/javascript">
+                        atOptions = {
+                            'key': '586f3a7fc60772622aa7fd5d0d96b4eb',
+                            'format': 'iframe',
+                            'height': 50,
+                            'width': 320,
+                            'params': {}
+                        };
+                    </script>
+                    <script type="text/javascript" src="//www.highperformanceformat.com/586f3a7fc60772622aa7fd5d0d96b4eb/invoke.js"></script>
+                </div>
+
+                <div class="payment-methods">
+                    <div class="payment-method active" onclick="selectPaymentMethod('bkash')">
+                        <div class="payment-icon">
+                            <i class="fas fa-mobile-alt" style="color: #e2136e;"></i>
+                        </div>
+                        <span class="payment-name">বিকাশ</span>
+                    </div>
+                    <div class="payment-method" onclick="selectPaymentMethod('nagad')">
+                        <div class="payment-icon">
+                            <i class="fas fa-wallet" style="color: #f89f1b;"></i>
+                        </div>
+                        <span class="payment-name">নগদ</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">পয়েন্ট সংখ্যা</label>
+                    <select class="form-input" id="withdraw-amount">
+                        <option value="800">800 Points - 20 টাকা</option>
+                        <option value="1200">1200 Points - 35 টাকা</option>
+                        <option value="2000">2000 Points - 50 টাকা</option>
+                        <option value="3500">3500 Points - 80 টাকা</option>
+                        <option value="5000">5000 Points - 100 টাকা</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" id="payment-label">বিকাশ নাম্বার</label>
+                    <input type="text" class="form-input" id="payment-number" placeholder="01XXXXXXXXX">
+                </div>
+
+                <button class="btn" id="withdraw-btn" onclick="submitWithdrawal()">পেমেন্ট কমফার্ম</button>
+
+                <div id="withdrawal-confirmation" class="confirmation" style="display: none;">
+                    <i class="fas fa-check-circle"></i>
+                    <h3>ধন্যবাদ</h3>
+                    <p>পেমেন্ট রিকুয়েস্ট পাঠানোর জন্য, ২৪ ঘন্টার মধ্যেই পেমেন্ট পেয়ে যাবেন</p>
+                </div>
+            </div>
+        </main>
+
+        <!-- Navigation -->
+        <nav class="nav">
+            <a href="#" class="nav-item active" onclick="showPage('home-page')">
+                <i class="fas fa-home"></i>
+                <span>HOME</span>
+            </a>
+            <a href="#" class="nav-item" onclick="showPage('earn-page')">
+                <i class="fas fa-coins"></i>
+                <span>EARN</span>
+            </a>
+            <a href="#" class="nav-item" onclick="showPage('media-page')">
+                <i class="fas fa-share-alt"></i>
+                <span>MEDIA</span>
+            </a>
+            <a href="#" class="nav-item" onclick="showPage('withdrawal-page')">
+                <i class="fas fa-wallet"></i>
+                <span>WITHDRAW</span>
+            </a>
+        </nav>
+    </div>
+
+    <script>
+        // Constants
+        const MIN_WITHDRAW_POINTS = 800;
+        const ADMIN_USER_ID = "7688575707";
+        const BOT_TOKEN = "8311601603:AAGj_AMWtWcURGukkIDWxwEVAcPRnBiLNmU";
+        const POINTS_PER_AD = 2;
+        const BONUS_POINTS = {
+            50: 20,
+            100: 50,
+            250: 100,
+            500: 200
+        };
+
+        // User Data
+        let userData = {
+            points: 0,
+            adsWatched: 0,
+            tasksCompleted: {
+                50: 0,
+                100: 0,
+                250: 0,
+                500: 0
+            },
+            lastTaskTime: {
+                50: 0,
+                100: 0,
+                250: 0,
+                500: 0
+            },
+            hasJoinedChannel: false,
+            lastDailyReward: 0,
+            selectedPaymentMethod: 'bkash'
+        };
+
+        // DOM Elements
+        const userPointsElement = document.getElementById('user-points');
+        const adsWatchedElement = document.getElementById('ads-watched');
+        const totalPointsElement = document.getElementById('total-points');
+        const joinChannelBtn = document.getElementById('join-channel-btn');
+        const dailyRewardBtn = document.getElementById('daily-reward-btn');
+        const dailyTimerElement = document.getElementById('daily-timer');
+        const withdrawBtn = document.getElementById('withdraw-btn');
+        const withdrawalConfirmation = document.getElementById('withdrawal-confirmation');
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load user data from localStorage
+            loadUserData();
+            
+            // Update UI
+            updateUI();
+            
+            // Set up timers
+            setupTimers();
+            
+            // Hide loading screen after 5 seconds
+            setTimeout(() => {
+                document.querySelector('.loading-screen').style.display = 'none';
+            }, 5000);
+        });
+
+        // Load user data from localStorage
+        function loadUserData() {
+            const savedData = localStorage.getItem('tasksWorkUserData');
+            if (savedData) {
+                try {
+                    userData = JSON.parse(savedData);
+                    // Initialize any new properties that might be missing in old data
+                    if (!userData.tasksCompleted) {
+                        userData.tasksCompleted = {50: 0, 100: 0, 250: 0, 500: 0};
+                    }
+                    if (!userData.lastTaskTime) {
+                        userData.lastTaskTime = {50: 0, 100: 0, 250: 0, 500: 0};
+                    }
+                } catch (e) {
+                    console.error('Error loading user data:', e);
+                    // Reset to default if data is corrupted
+                    localStorage.removeItem('tasksWorkUserData');
+                }
+            }
+        }
+
+        // Save user data to localStorage
+        function saveUserData() {
+            localStorage.setItem('tasksWorkUserData', JSON.stringify(userData));
+        }
+
+        // Update UI elements with current user data
+        function updateUI() {
+            userPointsElement.textContent = `${userData.points} Points`;
+            adsWatchedElement.textContent = userData.adsWatched;
+            totalPointsElement.textContent = userData.points;
+            
+            // Update task timers
+            updateTaskTimers();
+            
+            // Update join channel button
+            if (userData.hasJoinedChannel) {
+                joinChannelBtn.innerHTML = '<i class="fab fa-telegram"></i> Channel Joined';
+                joinChannelBtn.classList.add('btn-disabled');
+                joinChannelBtn.onclick = null;
+            }
+            
+            // Update daily reward button
+            updateDailyRewardButton();
+        }
+
+        // Set up timers for tasks and daily rewards
+        function setupTimers() {
+            setInterval(updateTaskTimers, 1000);
+            setInterval(updateDailyRewardTimer, 1000);
+        }
+
+        // Update task timers
+        function updateTaskTimers() {
+            const now = Date.now();
+            const twelveHours = 12 * 60 * 60 * 1000;
+            
+            for (const task of [50, 100, 250, 500]) {
+                const lastTime = userData.lastTaskTime[task] || 0;
+                const remainingTime = twelveHours - (now - lastTime);
+                const timerElement = document.getElementById(`timer-${task}`);
+                
+                if (remainingTime > 0) {
+                    const hours = Math.floor(remainingTime / (60 * 60 * 1000));
+                    const minutes = Math.floor((remainingTime % (60 * 60 * 1000)) / (60 * 1000));
+                    timerElement.textContent = `Available in: ${hours}h ${minutes}m`;
+                    
+                    // Disable button if task is on cooldown
+                    const buttons = document.querySelectorAll(`button[onclick="startTask(${task})"]`);
+                    buttons.forEach(btn => {
+                        btn.classList.add('btn-disabled');
+                        btn.onclick = null;
+                    });
+                } else {
+                    timerElement.textContent = 'Available now';
+                    
+                    // Enable button if task is available
+                    const buttons = document.querySelectorAll(`button[onclick="startTask(${task})"]`);
+                    buttons.forEach(btn => {
+                        btn.classList.remove('btn-disabled');
+                        btn.onclick = function() { startTask(task); };
+                    });
+                }
+            }
+        }
+
+        // Update daily reward timer
+        function updateDailyRewardTimer() {
+            const now = Date.now();
+            const twelveHours = 12 * 60 * 60 * 1000;
+            const remainingTime = twelveHours - (now - userData.lastDailyReward);
+            
+            if (remainingTime > 0) {
+                const hours = Math.floor(remainingTime / (60 * 60 * 1000));
+                const minutes = Math.floor((remainingTime % (60 * 60 * 1000)) / (60 * 1000));
+                dailyTimerElement.textContent = `Next reward in: ${hours}h ${minutes}m`;
+            } else {
+                dailyTimerElement.textContent = 'Reward available now!';
+            }
+        }
+
+        // Update daily reward button state
+        function updateDailyRewardButton() {
+            const now = Date.now();
+            const twelveHours = 12 * 60 * 60 * 1000;
+            const remainingTime = twelveHours - (now - userData.lastDailyReward);
+            
+            if (remainingTime > 0) {
+                dailyRewardBtn.classList.add('btn-disabled');
+                dailyRewardBtn.onclick = null;
+            } else {
+                dailyRewardBtn.classList.remove('btn-disabled');
+                dailyRewardBtn.onclick = claimDailyReward;
+            }
+        }
+
+        // Show a specific page and hide others
+        function showPage(pageId) {
+            // Update navigation
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+            
+            // Update pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+            
+            // Add animation effect
+            document.getElementById(pageId).classList.add('animate-shake');
+            setTimeout(() => {
+                document.getElementById(pageId).classList.remove('animate-shake');
+            }, 500);
+        }
+
+        // Watch a single ad
+        function watchAd() {
+            if (typeof show_9624679 === 'function') {
+                show_9624679().then(() => {
+                    // Ad watched successfully
+                    userData.adsWatched++;
+                    userData.points += POINTS_PER_AD;
+                    saveUserData();
+                    updateUI();
+                }).catch(error => {
+                    console.error('Error showing ad:', error);
+                    alert('Error showing ad. Please try again.');
+                });
+            } else {
+                // For demo purposes, simulate ad watching
+                setTimeout(() => {
+                    userData.adsWatched++;
+                    userData.points += POINTS_PER_AD;
+                    saveUserData();
+                    updateUI();
+                    alert('Ad watched! You earned 2 points.');
+                }, 1000);
+            }
+        }
+
+        // Start a task (watch ads)
+        function startTask(adCount) {
+            // Check if task is available
+            const now = Date.now();
+            const lastTime = userData.lastTaskTime[adCount] || 0;
+            const twelveHours = 12 * 60 * 60 * 1000;
+            
+            if (now - lastTime < twelveHours) {
+                alert('This task is on cooldown. Please wait.');
+                return;
+            }
+            
+            // Start watching ads
+            let adsWatched = 0;
+            const totalPoints = adCount * POINTS_PER_AD + BONUS_POINTS[adCount];
+            
+            const watchNextAd = () => {
+                if (adsWatched < adCount) {
+                    // Show the ad
+                    watchAd();
+                    adsWatched++;
+                    
+                    // Continue watching ads with a delay (simulating time between ads)
+                    if (adsWatched < adCount) {
+                        setTimeout(watchNextAd, 2000); // 2 seconds between ads
+                    } else {
+                        // Task completed
+                        userData.points += BONUS_POINTS[adCount];
+                        userData.tasksCompleted[adCount]++;
+                        userData.lastTaskTime[adCount] = now;
+                        saveUserData();
+                        
+                        // Update UI
+                        updateUI();
+                        
+                        // Show completion message
+                        alert(`Task completed! You earned ${totalPoints} points (${adCount * POINTS_PER_AD} + ${BONUS_POINTS[adCount]} bonus)!`);
+                    }
+                }
+            };
+            
+            // Start watching ads
+            watchNextAd();
+        }
+
+        // Copy referral link to clipboard
+        function copyReferralLink() {
+            const referralInput = document.getElementById('referral-link');
+            referralInput.select();
+            document.execCommand('copy');
+            
+            // Show feedback
+            alert('Referral link copied to clipboard!');
+        }
+
+        // Join Telegram channel
+        function joinChannel() {
+            // In a real app, you would check if user actually joined
+            userData.hasJoinedChannel = true;
+            userData.points += 50;
+            saveUserData();
+            updateUI();
+            
+            // Open channel link
+            window.open('https://t.me/viralpaybdsupport', '_blank');
+            
+            alert('Thanks for joining! 50 points added to your account.');
+        }
+
+        // Claim daily reward
+        function claimDailyReward() {
+            const now = Date.now();
+            const twelveHours = 12 * 60 * 60 * 1000;
+            
+            if (now - userData.lastDailyReward < twelveHours) {
+                alert('You can claim your next daily reward later.');
+                return;
+            }
+            
+            userData.lastDailyReward = now;
+            userData.points += 20;
+            saveUserData();
+            updateUI();
+            
+            alert('Daily reward claimed! 20 points added to your account.');
+        }
+
+        // Select payment method
+        function selectPaymentMethod(method) {
+            userData.selectedPaymentMethod = method;
+            saveUserData();
+            
+            // Update UI
+            document.querySelectorAll('.payment-method').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+            
+            // Update label
+            const label = document.getElementById('payment-label');
+            label.textContent = method === 'bkash' ? 'বিকাশ নাম্বার' : 'নগদ নাম্বার';
+            
+            // Update placeholder
+            const input = document.getElementById('payment-number');
+            input.placeholder = method === 'bkash' ? '01XXXXXXXXX' : '01XXXXXXXXX';
+        }
+
+        // Submit withdrawal request
+        function submitWithdrawal() {
+            const amount = parseInt(document.getElementById('withdraw-amount').value);
+            const paymentNumber = document.getElementById('payment-number').value.trim();
+            
+            // Validate
+            if (userData.points < amount) {
+                alert(`You don't have enough points. You have ${userData.points} points but need ${amount}.`);
+                return;
+            }
+            
+            if (amount < MIN_WITHDRAW_POINTS) {
+                alert(`Minimum withdrawal amount is ${MIN_WITHDRAW_POINTS} points.`);
+                return;
+            }
+            
+            if (!paymentNumber || !/^01\d{9}$/.test(paymentNumber)) {
+                alert('Please enter a valid mobile number (11 digits starting with 01).');
+                return;
+            }
+            
+            // Deduct points
+            userData.points -= amount;
+            saveUserData();
+            updateUI();
+            
+            // In a real app, you would send this to your backend
+            const paymentMethod = userData.selectedPaymentMethod;
+            const paymentAmount = calculatePaymentAmount(amount);
+            
+            // Show confirmation
+            withdrawalConfirmation.style.display = 'block';
+            withdrawBtn.style.display = 'none';
+            
+            // Scroll to confirmation
+            withdrawalConfirmation.scrollIntoView({ behavior: 'smooth' });
+            
+            // Reset form after 5 seconds
+            setTimeout(() => {
+                withdrawalConfirmation.style.display = 'none';
+                withdrawBtn.style.display = 'block';
+                document.getElementById('payment-number').value = '';
+            }, 5000);
+            
+            // In a real app, you would send this data to your Telegram bot
+            console.log(`Withdrawal request: ${paymentAmount} BDT to ${paymentMethod} ${paymentNumber}`);
+        }
+
+        // Calculate payment amount based on points
+        function calculatePaymentAmount(points) {
+            if (points >= 5000) return 100;
+            if (points >= 3500) return 80;
+            if (points >= 2000) return 50;
+            if (points >= 1200) return 35;
+            if (points >= 800) return 20;
+            return 0;
+        }
+    </script>
+</body>
+</html>
